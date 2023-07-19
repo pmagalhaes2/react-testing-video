@@ -9,13 +9,19 @@ interface ITask {
 
 const Tasks = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
   const handleClick = async () => {
-    const { data } = await axios.get(
-      "https://jsonplaceholder.typicode.com/todos?_limit=10"
-    );
+    try {
+      const { data } = await axios.get(
+        "https://jsonplaceholder.typicode.com/todos?_limit=10"
+      );
 
-    setTasks(data);
+      setTasks(data);
+      setErrorMessage(null);
+    } catch (error: any) {
+      setErrorMessage(error?.message);
+    }
   };
 
   return (
@@ -24,9 +30,8 @@ const Tasks = () => {
       <Button disabled={false} onClick={handleClick}>
         Get Tasks from API
       </Button>
-      {tasks.map((task) => (
-        <p key={task.id}>{task.title}</p>
-      ))}
+      {tasks && tasks.map((task) => <p key={task.id}>{task.title}</p>)}
+      {errorMessage}
     </div>
   );
 };

@@ -28,6 +28,11 @@ describe("Tasks Components", () => {
     worker.listen();
   });
 
+  // resetar o worker a cada teste
+  beforeEach(() => {
+    worker.resetHandlers();
+  });
+
   it("should fetch and show tasks on button click", async () => {
     render(<Tasks />);
 
@@ -36,5 +41,24 @@ describe("Tasks Components", () => {
     fireEvent.click(button);
 
     await screen.findByText(/delectus aut autem/i);
+  });
+
+  it("should show error message on fetch error", async () => {
+    worker.use(
+      rest.get(
+        "https://jsonplaceholder.typicode.com/todos",
+        async (req, res, ctx) => {
+          return res(ctx.status(500), ctx.json({ message: "error happened" }));
+        }
+      )
+    );
+
+    render(<Tasks />);
+
+    const button = screen.getByText(/get tasks from api/i);
+
+    fireEvent.click(button);
+
+    await screen.findByText("Request failed with status code 500");
   });
 });
