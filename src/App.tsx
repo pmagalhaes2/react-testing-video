@@ -11,7 +11,7 @@ function App() {
       <p>{message}</p>
       <button
         style={{ backgroundColor: "blue", color: "white", padding: 10 }}
-        onClick={() => setMessage("New message!")}
+        onClick={() => setMessage("New message")}
       >
         Change message
       </button>
