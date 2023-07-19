@@ -13,4 +13,20 @@ describe("Button Component", () => {
 
     expect(button).toHaveStyle({ backgroundColor: "blue" });
   });
+
+  it("should call onClick prop on click", () => {
+    const onClick = jest.fn();
+
+    render(
+      <Button disabled onClick={onClick}>
+        Click me
+      </Button>
+    );
+
+    const button = screen.getByText(/click me/i);
+
+    fireEvent.click(button);
+
+    expect(onClick).toHaveBeenCalled()
+  });
 });
